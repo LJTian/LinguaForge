@@ -1,71 +1,247 @@
-### **1. 用户体验（UX）设计**
+# LinguaForge - 游戏化英语学习平台
 
-用户体验是让用户感到愉悦和易用的关键。设计一个清晰、直观的界面至关重要。
+LinguaForge 是一个创新的英语学习平台，通过游戏化的方式让用户学习英语。项目采用现代化的技术栈，提供三种核心游戏模式：故事冒险、词汇塔防和互动配音。
 
-#### **设计原则**
-* **简洁至上：** 界面应干净无杂，避免过多的按钮和信息。
-* **即时反馈：** 用户的每一个操作，如回答正确或错误，都应有即时的视觉和听觉反馈。
-* **一致性：** 整个网站的颜色、字体、按钮样式应保持一致。
+## 🎮 游戏特色
 
-#### **关键页面设计**
-* **主页/仪表盘：**
-    * **核心功能区：** 突出显示三个核心游戏模式（故事冒险、词汇塔防、互动配音）。
-    * **进度追踪：** 显示用户的总学习时间、已掌握的单词量和当前等级。
-    * **成就系统：** 展示用户获得的成就徽章，如“词汇大师”、“发音达人”等。
-* **游戏页面：**
-    * **故事冒险：** 采用类似视觉小说的界面。左侧显示人物对话，右侧是场景图。底部有选项按钮或文本输入框。
-    * **词汇塔防：** 游戏界面应有清晰的路径、防御塔建造区域和血量/分数指示器。
-    * **互动配音：** 显示视频片段、台词字幕和录音按钮。提供波形图显示，让用户可以看到自己的录音情况。
-* **词库页面：**
-    * **搜索与筛选：** 提供强大的搜索功能，允许用户按字母、主题或掌握程度筛选词汇。
-    * **单词卡片：** 每个单词卡片应包含发音、多种例句、图片，并允许用户添加笔记。
+### 三大游戏模式
+- **📚 故事冒险** - 在有趣的故事情节中学习英语，通过选择正确的单词和语法来推进剧情发展
+- **🏰 词汇塔防** - 建造防御塔来抵御错误词汇的进攻，通过正确回答问题来升级你的防御
+- **🎤 互动配音** - 为电影片段配音，练习发音和语调，AI会评估你的发音准确性
 
----
+### 核心功能
+- **即时反馈系统** - 每个操作都有视觉和听觉反馈
+- **进度追踪** - 显示学习时间、掌握单词量和等级
+- **成就系统** - 各种学习成就徽章
+- **排行榜** - 全球或好友排名系统
+- **每日任务** - 培养学习习惯
 
-### **2. 游戏设计**
+## 🛠 技术架构
 
-游戏设计是让学习变得有趣的灵魂。我们需要在每个游戏模式中融入奖励机制和挑战。
+### 后端技术栈
+- **Go** + **Gin** - 高性能后端框架
+- **MariaDB** - 主数据库
+- **Redis** - 缓存和排行榜
+- **JWT** - 用户认证
+- **Docker** - 容器化部署
 
-#### **通用游戏机制**
-* **经验值与等级：** 答对问题、完成关卡都会获得经验值，经验值积累可提升用户等级，解锁新的游戏模式或内容。
-* **金币/道具系统：** 完成任务可获得虚拟金币，金币可用于购买游戏道具，如“提示”或“重试”机会。
-* **排行榜：** 引入全球或好友排行榜，激发用户的竞争意识。
-* **每日任务：** 设置每日或每周的小目标，如“今天完成10个单词拼写”，以培养用户的学习习惯。
+### 前端技术栈
+- **React** + **TypeScript** - 现代化前端框架
+- **Vite** - 快速构建工具
+- **Tailwind CSS** - 样式框架
+- **Zustand** - 状态管理
+- **React Router** - 路由管理
+- **Axios** - HTTP客户端
 
-#### **具体游戏玩法设计**
-* **故事冒险：**
-    * **叙事结构：** 将词汇和语法融入有趣的故事情节中。例如，玩家需要用正确的英语指令来指挥一个机器人完成任务。
-    * **难度递进：** 随着关卡推进，谜题难度逐渐增加，引入更复杂的词汇和语法。
-* **词汇塔防：**
-    * **怪物设计：** 不同的怪物代表不同的错误类型，如“拼写错误怪”、“时态错误怪”。
-    * **防御塔升级：** 用户可以通过学习和正确回答问题来升级防御塔，使其攻击力或范围更强。
-* **互动配音：**
-    * **角色选择：** 用户可以选择为不同的角色配音，每个角色都有独特的台词。
-    * **AI 评分：** 后端可以通过一些开源库（如 **DeepSpeech** 或 **Coqui TTS**）来评估用户的发音与原版的相似度。
+## 🚀 快速开始
 
----
+### 环境要求
+- Go 1.21+
+- Node.js 18+
+- Docker & Docker Compose v2 (推荐)
+- MariaDB 10.11+
+- Redis 7+
 
-### **3. 技术设计**
+### 1. 克隆项目
+```bash
+git clone https://github.com/LJTian/LinguaForge.git
+cd LinguaForge
+```
 
-技术设计是实现所有想法的基础，确保网站稳定、高效。
+### 2. 后端设置
+```bash
+cd backend
 
-#### **核心模块**
-* **用户模块：** 负责用户注册、登录、个人信息和学习进度的管理。
-* **词库模块：** 存储和管理所有单词、例句、图片和发音文件。
-* **游戏模块：**
-    * **游戏逻辑：** 负责处理每个游戏的规则、计分和状态管理。
-    * **游戏数据：** 存储用户的游戏分数、关卡进度和游戏内道具。
-* **排行榜模块：** 实时更新和显示用户排名。
+# 复制环境配置文件
+cp env.example .env
 
-#### **数据结构设计（PostgreSQL）**
-* **`users` 表：** 存储用户ID、用户名、密码、等级、经验值。
-* **`words` 表：** 存储单词ID、英文、中文、发音文件路径、图片。
-* **`user_progress` 表：** 存储用户ID、单词ID、学习次数、掌握程度（例如，通过一个评分系统来衡量）。
-* **`game_records` 表：** 存储游戏ID、用户ID、游戏类型、分数、完成时间。
+# 编辑配置文件
+vim .env
 
-#### **API 设计**
-* **GET `/api/game/adventure/start`：** 获取新一轮冒险游戏的数据。
-* **POST `/api/game/defense/submit`：** 提交塔防游戏的答案和得分。
-* **POST `/api/game/dubbing/upload`：** 上传用户的配音文件。
-* **GET `/api/words`：** 获取用户的词库或特定单词数据。
-* **GET `/api/leaderboard`：** 获取排行榜数据。
+# 安装依赖
+go mod download
+
+# 运行数据库迁移
+mysql -u root -p < migrations/001_initial_schema.sql
+
+# 启动后端服务
+go run main.go
+```
+
+### 3. 前端设置
+```bash
+cd frontend
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+```
+
+### 4. Docker 部署
+
+#### 一键启动 (推荐)
+```bash
+# 自动检测Docker Compose版本并启动
+./start.sh
+
+# 或者直接使用Docker Compose v2
+./start-v2.sh
+```
+
+#### 手动启动
+```bash
+# 使用 Docker Compose v2 (推荐)
+docker compose up -d
+
+# 或者使用 Docker Compose v1
+docker-compose up -d
+
+# 查看服务状态
+docker compose ps     # v2版本
+# 或者
+docker-compose ps     # v1版本
+
+# 查看日志
+docker compose logs -f  # v2版本
+# 或者
+docker-compose logs -f  # v1版本
+```
+
+#### 访问地址
+启动成功后，可以通过以下地址访问：
+- **前端界面**: http://localhost:3000
+- **后端API**: http://localhost:8080
+- **健康检查**: http://localhost:8080/health
+- **数据库**: localhost:3307 (用户名: linguaforge, 密码: linguaforge_password)
+
+## 📁 项目结构
+
+```
+LinguaForge/
+├── backend/                 # Go后端
+│   ├── api/                # API路由
+│   ├── internal/           # 内部业务逻辑
+│   │   ├── user/          # 用户模块
+│   │   ├── content/       # 内容模块
+│   │   ├── game/          # 游戏逻辑模块
+│   │   └── leaderboard/   # 排行榜模块
+│   ├── config/            # 配置管理
+│   ├── storage/           # 数据库和缓存连接
+│   ├── migrations/        # 数据库迁移文件
+│   └── main.go           # 程序入口
+├── frontend/              # React前端
+│   ├── src/
+│   │   ├── components/   # React组件
+│   │   ├── pages/        # 页面组件
+│   │   ├── stores/       # Zustand状态管理
+│   │   ├── services/     # API服务
+│   │   ├── types/        # TypeScript类型定义
+│   │   └── utils/        # 工具函数
+│   └── package.json
+├── docker-compose.yml     # Docker编排文件
+├── nginx.conf            # Nginx配置
+└── README.md
+```
+
+## 🔧 配置说明
+
+### 环境变量
+```bash
+# 后端配置
+ENVIRONMENT=development
+PORT=8080
+
+# 数据库配置
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=linguaforge
+
+# Redis配置
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+REDIS_DB=0
+
+# JWT配置
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRE_HOURS=24
+
+# AWS S3配置（文件存储）
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_REGION=us-east-1
+AWS_BUCKET_NAME=linguaforge-assets
+AWS_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+```
+
+## 📊 API 文档
+
+### 认证相关
+- `POST /api/v1/auth/register` - 用户注册
+- `POST /api/v1/auth/login` - 用户登录
+
+### 用户相关
+- `GET /api/v1/profile` - 获取用户资料
+- `PUT /api/v1/profile` - 更新用户资料
+
+### 词库相关
+- `GET /api/v1/words` - 获取单词列表
+- `GET /api/v1/words/:id` - 获取单个单词
+- `POST /api/v1/words/progress` - 更新学习进度
+- `GET /api/v1/words/progress` - 获取用户学习进度
+- `GET /api/v1/words/categories` - 获取单词分类
+
+### 游戏相关
+- `POST /api/v1/games/start` - 开始游戏
+- `POST /api/v1/games/submit` - 提交游戏分数
+- `POST /api/v1/games/dubbing/upload` - 提交配音
+- `GET /api/v1/games/history` - 获取游戏历史
+
+### 排行榜相关
+- `GET /api/v1/leaderboard` - 获取排行榜
+- `GET /api/v1/leaderboard/rank` - 获取用户排名
+- `GET /api/v1/leaderboard/top` - 获取顶级玩家
+
+## 🎯 开发计划
+
+### 已完成功能
+- ✅ 用户注册/登录系统
+- ✅ JWT认证中间件
+- ✅ 词库管理系统
+- ✅ 基础游戏框架
+- ✅ 排行榜系统
+- ✅ 前端基础架构
+- ✅ Docker部署配置
+
+### 待开发功能
+- 🔄 游戏界面实现
+- 🔄 AI发音评分
+- 🔄 成就系统
+- 🔄 每日任务
+- 🔄 社交功能
+- 🔄 移动端适配
+
+## 🤝 贡献指南
+
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 📞 联系方式
+
+- 项目链接: [https://github.com/LJTian/LinguaForge](https://github.com/LJTian/LinguaForge)
+- 问题反馈: [Issues](https://github.com/LJTian/LinguaForge/issues)
+
+## 🙏 致谢
+
+感谢所有为这个项目做出贡献的开发者和用户！
