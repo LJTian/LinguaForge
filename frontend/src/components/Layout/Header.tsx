@@ -12,29 +12,29 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-blue-600 text-white shadow-lg">
+    <header className="site-header bg-blue-700 text-white shadow-lg">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 text-white hover:text-white">
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
               <span className="text-blue-600 font-bold text-lg">L</span>
             </div>
-            <span className="text-xl font-bold">LinguaForge</span>
+            <span className="text-xl font-bold text-white">LinguaForge</span>
           </Link>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="hover:text-blue-200 transition-colors">
+          <nav className="hidden md:flex items-center space-x-6 text-white">
+            <Link to="/" className="text-white hover:text-white font-medium transition-colors">
               首页
             </Link>
-            <Link to="/games" className="hover:text-blue-200 transition-colors">
+            <Link to="/games" className="text-white hover:text-white font-medium transition-colors">
               游戏
             </Link>
-            <Link to="/words" className="hover:text-blue-200 transition-colors">
+            <Link to="/words" className="text-white hover:text-white font-medium transition-colors">
               词库
             </Link>
-            <Link to="/leaderboard" className="hover:text-blue-200 transition-colors">
+            <Link to="/leaderboard" className="text-white hover:text-white font-medium transition-colors">
               排行榜
             </Link>
           </nav>
@@ -46,7 +46,7 @@ const Header: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <div className="text-sm">
                     <div className="font-medium">{user?.username}</div>
-                    <div className="text-blue-200">
+                    <div className="text-white/90">
                       等级 {user?.level} | 经验 {user?.experience} | 金币 {user?.coins}
                     </div>
                   </div>
