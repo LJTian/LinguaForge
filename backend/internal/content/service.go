@@ -18,7 +18,7 @@ func NewService(db *sql.DB) *Service {
 // GetWords 获取单词列表
 func (s *Service) GetWords(req *GetWordsRequest, userID int) ([]WordWithProgress, error) {
 	query := `
-		SELECT w.id, w.english, w.chinese, w.pronunciation, w.audio_url, w.image_url,
+		SELECT w.id, w.english, w.chinese, w.pronunciation, w.audio_url, w.image_url, w.story,
 		       w.difficulty_level, w.category, w.created_at, w.updated_at,
 		       up.id, up.user_id, up.word_id, up.study_count, up.mastery_level,
 		       up.last_studied, up.created_at as up_created_at, up.updated_at as up_updated_at
@@ -75,9 +75,10 @@ func (s *Service) GetWords(req *GetWordsRequest, userID int) ([]WordWithProgress
 		var progressUpdatedAt sql.NullTime
 
 		var pronunciation, audioURL, imageURL sql.NullString
+		var story sql.NullString
 		err := rows.Scan(
 			&word.ID, &word.English, &word.Chinese, &pronunciation,
-			&audioURL, &imageURL, &word.DifficultyLevel, &word.Category,
+			&audioURL, &imageURL, &story, &word.DifficultyLevel, &word.Category,
 			&word.CreatedAt, &word.UpdatedAt,
 			&progressID, &progressUserID, &progressWordID, &studyCount,
 			&masteryLevel, &lastStudied, &progressCreatedAt, &progressUpdatedAt,
@@ -95,6 +96,9 @@ func (s *Service) GetWords(req *GetWordsRequest, userID int) ([]WordWithProgress
 		}
 		if imageURL.Valid {
 			word.ImageURL = imageURL.String
+		}
+		if story.Valid {
+			word.Story = story.String
 		}
 
 		// 如果有进度数据，则填充
@@ -123,12 +127,12 @@ func (s *Service) GetWordByID(id int) (*Word, error) {
 	var pronunciation, audioURL, imageURL sql.NullString
 
 	err := s.db.QueryRow(`
-		SELECT id, english, chinese, pronunciation, audio_url, image_url,
+		SELECT id, english, chinese, pronunciation, audio_url, image_url, story,
 		       difficulty_level, category, created_at, updated_at
 		FROM words WHERE id = ?
 	`, id).Scan(
 		&word.ID, &word.English, &word.Chinese, &pronunciation,
-		&audioURL, &imageURL, &word.DifficultyLevel, &word.Category,
+		&audioURL, &imageURL, &word.Story, &word.DifficultyLevel, &word.Category,
 		&word.CreatedAt, &word.UpdatedAt,
 	)
 	if err != nil {

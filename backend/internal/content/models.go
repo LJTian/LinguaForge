@@ -12,6 +12,7 @@ type Word struct {
 	Pronunciation   string    `json:"pronunciation" db:"pronunciation"`
 	AudioURL        string    `json:"audio_url" db:"audio_url"`
 	ImageURL        string    `json:"image_url" db:"image_url"`
+	Story           string    `json:"story" db:"story"`
 	DifficultyLevel int       `json:"difficulty_level" db:"difficulty_level"`
 	Category        string    `json:"category" db:"category"`
 	CreatedAt       time.Time `json:"created_at" db:"created_at"`

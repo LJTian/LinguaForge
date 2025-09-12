@@ -43,6 +43,7 @@ export interface Word {
   pronunciation: string;
   audio_url: string;
   image_url: string;
+  story?: string;
   difficulty_level: number;
   category: string;
   created_at: string;
@@ -67,6 +68,7 @@ export interface WordWithProgress {
   pronunciation: string;
   audio_url: string;
   image_url: string;
+  story?: string;
   difficulty_level: number;
   category: string;
   created_at: string;

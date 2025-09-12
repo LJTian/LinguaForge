@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Games from './pages/Games';
+import Words from './pages/Words';
 import AdventureGame from './pages/AdventureGame';
 import DefenseGame from './pages/DefenseGame';
 import DubbingGame from './pages/DubbingGame';
@@ -96,6 +97,17 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute>
               <DubbingGame />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/words"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Words />
+              </Layout>
             </ProtectedRoute>
           }
         />
