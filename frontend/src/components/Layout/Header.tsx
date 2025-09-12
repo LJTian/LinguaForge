@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
+import { apiService } from '../../services/api';
 
 const Header: React.FC = () => {
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout, setPreferredCategory } = useAuthStore();
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  useEffect(() => {
+    // 取分类列表
+    apiService
+      .getCategories()
+      .then((res) => setCategories(res.categories || []))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setSelectedCategory(user?.preferred_category || '');
+  }, [user?.preferred_category]);
 
   return (
     <header className="site-header bg-blue-700 text-white shadow-lg">
@@ -49,6 +64,32 @@ const Header: React.FC = () => {
                     <div className="text-white/90">
                       等级 {user?.level} | 经验 {user?.experience} | 金币 {user?.coins}
                     </div>
+                    {(
+                      <div className="text-white/90 flex items-center gap-2 mt-1">
+                        <span>首选分类：</span>
+                        <select
+                          className="text-blue-700 rounded px-2 py-1 text-xs"
+                          value={selectedCategory}
+                          onChange={async (e) => {
+                            const value = e.target.value;
+                            setSelectedCategory(value);
+                            // 确保后端已保存，游戏开始时即可按分类取词
+                            try {
+                              await setPreferredCategory(value);
+                            } catch {
+                              // ignore
+                            }
+                          }}
+                        >
+                          <option value="">全部</option>
+                          {categories.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <button

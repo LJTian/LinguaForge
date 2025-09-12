@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -73,35 +72,25 @@ func (h *Handlers) GetProfile(c *gin.Context) {
 
 // UpdateProfile 更新用户资料
 func (h *Handlers) UpdateProfile(c *gin.Context) {
-	_, exists := c.Get("user_id")
+	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
 		return
 	}
 
-	var req struct {
-		Email string `json:"email" binding:"email"`
-	}
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var body map[string]string
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// 这里可以添加更新逻辑
-	c.JSON(http.StatusOK, gin.H{"message": "Profile updated successfully"})
-}
-
-// GetLeaderboard 获取排行榜
-func (h *Handlers) GetLeaderboard(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil || limit <= 0 {
-		limit = 10
+	// 更新字段
+	if email, ok := body["email"]; ok && email != "" {
+		h.service.DB().Exec("UPDATE users SET email = ?, updated_at = NOW() WHERE id = ?", email, userID.(int))
+	}
+	if pref, ok := body["preferred_category"]; ok {
+		h.service.DB().Exec("UPDATE users SET preferred_category = ?, updated_at = NOW() WHERE id = ?", pref, userID.(int))
 	}
 
-	// 这里应该调用排行榜服务
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Leaderboard endpoint - to be implemented",
-		"limit":   limit,
-	})
+	c.JSON(http.StatusOK, gin.H{"message": "Profile updated successfully"})
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
+import { useAuthStore } from '../stores/authStore';
 import type { WordWithProgress } from '../types';
 
 const Words: React.FC = () => {
@@ -8,6 +9,7 @@ const Words: React.FC = () => {
   const [words, setWords] = useState<WordWithProgress[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const { user, isAuthenticated, setPreferredCategory } = useAuthStore();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -26,7 +28,8 @@ const Words: React.FC = () => {
       setLoading(true);
       setError('');
       try {
-        const res = await apiService.getWords({ category: activeCategory, limit: 50 });
+        const effectiveCategory = activeCategory || user?.preferred_category || '';
+        const res = await apiService.getWords({ category: effectiveCategory, limit: 50 });
         setWords(res.words || []);
       } catch (e) {
         setError('加载单词失败');
@@ -35,7 +38,7 @@ const Words: React.FC = () => {
       }
     };
     fetchWords();
-  }, [activeCategory]);
+  }, [activeCategory, user?.preferred_category]);
 
   return (
     <div className="space-y-6">
@@ -44,7 +47,7 @@ const Words: React.FC = () => {
       {/* 分类选择 */}
       <div className="flex flex-wrap gap-2">
         <button
-          className={`px-3 py-1 rounded-full border ${activeCategory === '' ? 'bg-blue-600 text-white' : 'border-gray-300 hover:bg-blue-50'}`}
+          className={`px-3 py-1 rounded-full border ${(activeCategory === '' && !user?.preferred_category) ? 'bg-blue-600 text-white' : 'border-gray-300 hover:bg-blue-50'}`}
           onClick={() => setActiveCategory('')}
         >
           全部
@@ -52,13 +55,34 @@ const Words: React.FC = () => {
         {categories.map((c) => (
           <button
             key={c}
-            className={`px-3 py-1 rounded-full border ${activeCategory === c ? 'bg-blue-600 text-white' : 'border-gray-300 hover:bg-blue-50'}`}
+            className={`px-3 py-1 rounded-full border ${(activeCategory || user?.preferred_category) === c ? 'bg-blue-600 text-white' : 'border-gray-300 hover:bg-blue-50'}`}
             onClick={() => setActiveCategory(c)}
           >
             {c}
           </button>
         ))}
       </div>
+
+      {isAuthenticated && (
+        <div>
+          <button
+            className="mt-2 px-3 py-1 rounded-md bg-green-600 text-white hover:bg-green-700"
+            onClick={async () => {
+              try {
+                await setPreferredCategory(activeCategory);
+                alert('已设为首选分类：' + (activeCategory || '全部'));
+              } catch (e) {
+                alert('设置失败');
+              }
+            }}
+          >
+            设为首选分类
+          </button>
+          {user?.preferred_category && (
+            <span className="ml-3 text-sm text-gray-600">当前首选：{user.preferred_category}</span>
+          )}
+        </div>
+      )}
 
       {/* 列表 */}
       {error && <div className="text-red-600">{error}</div>}

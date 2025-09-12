@@ -1,9 +1,29 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import { apiService } from '../services/api';
 
 const Games: React.FC = () => {
-  const { user } = useAuthStore();
+  const { user, setPreferredCategory } = useAuthStore();
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(user?.preferred_category || '');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await apiService.getCategories();
+        setCategories(res.categories || []);
+      } catch {
+        // ignore
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    setSelectedCategory(user?.preferred_category || '');
+  }, [user?.preferred_category]);
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -14,6 +34,11 @@ const Games: React.FC = () => {
         <p className="text-xl text-gray-600">
           欢迎 {user?.username}，选择你喜欢的游戏开始学习吧！
         </p>
+        {user?.preferred_category && (
+          <div className="mt-2 inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+            当前首选分类：{user.preferred_category}
+          </div>
+        )}
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">

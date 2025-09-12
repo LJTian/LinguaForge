@@ -6,6 +6,7 @@ export interface User {
   level: number;
   experience: number;
   coins: number;
+  preferred_category?: string;
   created_at: string;
   updated_at: string;
 }
@@ -17,6 +18,7 @@ export interface UserProfile {
   level: number;
   experience: number;
   coins: number;
+  preferred_category?: string;
 }
 
 export interface LoginRequest {

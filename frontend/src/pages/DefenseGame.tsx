@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
+import { useAuthStore } from '../stores/authStore';
 
 const DefenseGame: React.FC = () => {
   const { startGame, submitScore, isLoading } = useGameStore();
+  const { user } = useAuthStore();
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
@@ -74,6 +76,9 @@ const DefenseGame: React.FC = () => {
             <div>
               <h1 className="text-2xl font-bold text-gray-800">词汇塔防</h1>
               <p className="text-gray-600">第 {wave} 波</p>
+              {user?.preferred_category && (
+                <p className="text-sm text-blue-700 mt-1">当前首选分类：{user.preferred_category}</p>
+              )}
             </div>
             <div className="flex space-x-6">
               <div className="text-center">

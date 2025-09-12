@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
+import { useAuthStore } from '../stores/authStore';
+import type { AdventureGame as AdventureGameType, AdventureOption } from '../types';
 
 const AdventureGame: React.FC = () => {
-  const { startGame, submitScore, isLoading } = useGameStore();
+  const { startGame, submitScore, isLoading, currentGame } = useGameStore();
+  const { user } = useAuthStore();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [score, setScore] = useState(0);
@@ -13,12 +16,11 @@ const AdventureGame: React.FC = () => {
     startGame('adventure', 1);
   }, [startGame]);
 
-  const handleOptionSelect = (optionId: number) => {
+  const handleOptionSelect = (optionId: number, correct: boolean) => {
     setSelectedOption(optionId);
     setShowFeedback(true);
     
-    // 模拟正确答案
-    if (optionId === 1) {
+    if (correct) {
       setScore(score + 10);
     }
   };
@@ -49,6 +51,10 @@ const AdventureGame: React.FC = () => {
     );
   }
 
+  const game = (currentGame as AdventureGameType) || null;
+  const options: AdventureOption[] = game?.options || [];
+  const storyText = game?.story || '加载故事中...';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-6">
       <div className="max-w-4xl mx-auto">
@@ -58,6 +64,9 @@ const AdventureGame: React.FC = () => {
             <div>
               <h1 className="text-2xl font-bold text-gray-800">故事冒险</h1>
               <p className="text-gray-600">第 {currentQuestion + 1} 关</p>
+              {user?.preferred_category && (
+                <p className="text-sm text-blue-700 mt-1">当前首选分类：{user.preferred_category}</p>
+              )}
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-purple-600">{score}</div>
@@ -73,10 +82,7 @@ const AdventureGame: React.FC = () => {
               <span className="text-3xl">📚</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">神秘的英语森林</h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              你是一个勇敢的探险家，正在探索神秘的英语森林。突然，你遇到了一个需要帮助的精灵。
-              精灵说："如果你能帮我找到正确的英语单词，我就给你一个神奇的礼物！"
-            </p>
+            <p className="text-lg text-gray-600 leading-relaxed">{storyText}</p>
           </div>
 
           {/* 问题区域 */}
@@ -85,15 +91,10 @@ const AdventureGame: React.FC = () => {
               请选择正确的英语单词：
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { id: 1, text: "Hello", correct: true },
-                { id: 2, text: "Hallo", correct: false },
-                { id: 3, text: "Hola", correct: false },
-                { id: 4, text: "Bonjour", correct: false },
-              ].map((option) => (
+              {options.map((option) => (
                 <button
                   key={option.id}
-                  onClick={() => handleOptionSelect(option.id)}
+                  onClick={() => handleOptionSelect(option.id, option.correct)}
                   disabled={selectedOption !== null}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     selectedOption === option.id
@@ -114,18 +115,13 @@ const AdventureGame: React.FC = () => {
           {showFeedback && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <div className="flex items-center">
-                <span className="text-2xl mr-3">
-                  {selectedOption === 1 ? '🎉' : '😔'}
-                </span>
+                <span className="text-2xl mr-3">{options.find(o => o.id === selectedOption)?.correct ? '🎉' : '😔'}</span>
                 <div>
                   <h4 className="font-semibold text-blue-800">
-                    {selectedOption === 1 ? '太棒了！' : '再试一次！'}
+                    {options.find(o => o.id === selectedOption)?.correct ? '太棒了！' : '再试一次！'}
                   </h4>
                   <p className="text-blue-600">
-                    {selectedOption === 1 
-                      ? '你选择了正确的单词 "Hello"！精灵很高兴，给了你10分奖励。'
-                      : '这个单词不是英语单词，请选择正确的英语单词。'
-                    }
+                    {options.find(o => o.id === selectedOption)?.correct ? '回答正确！你获得了10分奖励。' : '这个选项不正确，请再试一次。'}
                   </p>
                 </div>
               </div>

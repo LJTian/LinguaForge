@@ -23,6 +23,11 @@ func NewService(db *sql.DB, cfg *config.Config) *Service {
 	}
 }
 
+// DB 暴露底层数据库（仅用于简单更新场景）
+func (s *Service) DB() *sql.DB {
+	return s.db
+}
+
 // Register 用户注册
 func (s *Service) Register(req *RegisterRequest) (*User, error) {
 	// 检查用户名是否已存在
@@ -103,11 +108,11 @@ func (s *Service) Login(req *LoginRequest) (*LoginResponse, error) {
 func (s *Service) GetByID(id int) (*User, error) {
 	user := &User{}
 	err := s.db.QueryRow(`
-		SELECT id, username, email, password_hash, level, experience, coins, created_at, updated_at
+		SELECT id, username, email, password_hash, level, experience, coins, preferred_category, created_at, updated_at
 		FROM users WHERE id = ?
 	`, id).Scan(
 		&user.ID, &user.Username, &user.Email, &user.PasswordHash,
-		&user.Level, &user.Experience, &user.Coins, &user.CreatedAt, &user.UpdatedAt,
+		&user.Level, &user.Experience, &user.Coins, &user.PreferredCategory, &user.CreatedAt, &user.UpdatedAt,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -122,11 +127,11 @@ func (s *Service) GetByID(id int) (*User, error) {
 func (s *Service) GetByUsername(username string) (*User, error) {
 	user := &User{}
 	err := s.db.QueryRow(`
-		SELECT id, username, email, password_hash, level, experience, coins, created_at, updated_at
+		SELECT id, username, email, password_hash, level, experience, coins, preferred_category, created_at, updated_at
 		FROM users WHERE username = ?
 	`, username).Scan(
 		&user.ID, &user.Username, &user.Email, &user.PasswordHash,
-		&user.Level, &user.Experience, &user.Coins, &user.CreatedAt, &user.UpdatedAt,
+		&user.Level, &user.Experience, &user.Coins, &user.PreferredCategory, &user.CreatedAt, &user.UpdatedAt,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -141,11 +146,11 @@ func (s *Service) GetByUsername(username string) (*User, error) {
 func (s *Service) GetProfile(userID int) (*UserProfile, error) {
 	profile := &UserProfile{}
 	err := s.db.QueryRow(`
-		SELECT id, username, email, level, experience, coins
+		SELECT id, username, email, level, experience, coins, preferred_category
 		FROM users WHERE id = ?
 	`, userID).Scan(
 		&profile.ID, &profile.Username, &profile.Email,
-		&profile.Level, &profile.Experience, &profile.Coins,
+		&profile.Level, &profile.Experience, &profile.Coins, &profile.PreferredCategory,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {

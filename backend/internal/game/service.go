@@ -18,8 +18,9 @@ func NewService(db *sql.DB) *Service {
 
 // StartAdventureGame 开始冒险游戏
 func (s *Service) StartAdventureGame(userID int, level int) (*AdventureGame, error) {
-	// 获取随机单词
-	words, err := s.getRandomWords(5, level)
+	// 获取随机单词（根据用户偏好分类筛选）
+	preferred, _ := s.getUserPreferredCategory(userID)
+	words, err := s.getRandomWords(5, level, preferred)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get words: %w", err)
 	}
@@ -44,8 +45,9 @@ func (s *Service) StartAdventureGame(userID int, level int) (*AdventureGame, err
 
 // StartDefenseGame 开始塔防游戏
 func (s *Service) StartDefenseGame(userID int, level int) (*DefenseGame, error) {
-	// 获取随机单词
-	adventureWords, err := s.getRandomWords(10, level)
+	// 获取随机单词（根据用户偏好分类筛选）
+	preferred, _ := s.getUserPreferredCategory(userID)
+	adventureWords, err := s.getRandomWords(10, level, preferred)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get words: %w", err)
 	}
@@ -186,15 +188,16 @@ func (s *Service) GetGameHistory(userID int, gameType GameType, limit int) ([]Ga
 
 // 辅助方法
 
-func (s *Service) getRandomWords(count int, difficulty int) ([]AdventureWord, error) {
-	query := `
-		SELECT id, english, chinese
-		FROM words
-		WHERE difficulty_level = ?
-		ORDER BY RAND()
-		LIMIT ?
-	`
-	rows, err := s.db.Query(query, difficulty, count)
+func (s *Service) getRandomWords(count int, difficulty int, category string) ([]AdventureWord, error) {
+	base := `SELECT id, english, chinese FROM words WHERE difficulty_level = ?`
+	args := []interface{}{difficulty}
+	if category != "" {
+		base += " AND category = ?"
+		args = append(args, category)
+	}
+	base += " ORDER BY RAND() LIMIT ?"
+	args = append(args, count)
+	rows, err := s.db.Query(base, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -318,4 +321,16 @@ func (s *Service) getSceneScripts(sceneID int) ([]DubbingScript, error) {
 	}
 
 	return scripts, nil
+}
+
+func (s *Service) getUserPreferredCategory(userID int) (string, error) {
+	var preferred sql.NullString
+	err := s.db.QueryRow("SELECT preferred_category FROM users WHERE id = ?", userID).Scan(&preferred)
+	if err != nil {
+		return "", err
+	}
+	if preferred.Valid {
+		return preferred.String, nil
+	}
+	return "", nil
 }
