@@ -1,32 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
-import { useAuthStore } from '../stores/authStore';
 import type { AdventureGame as AdventureGameType, AdventureOption } from '../types';
 
 const AdventureGame: React.FC = () => {
   const { startGame, submitScore, isLoading, currentGame } = useGameStore();
-  const { user } = useAuthStore();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [roundIndex, setRoundIndex] = useState(0);
 
   useEffect(() => {
     startGame('adventure', 1);
   }, [startGame]);
 
+  // Compute game/rounds and memoized story before any early return to keep hooks order consistent
+  const game = (currentGame as AdventureGameType) || null;
+  const totalRounds = game?.rounds?.length || 1;
+  const options: AdventureOption[] = (game?.rounds && game.rounds[roundIndex]?.options) || game?.options || [];
+  const storyRaw = (game?.rounds && game.rounds[roundIndex]?.story) || game?.story || '加载故事中...';
+  const correctText = useMemo(() => options.find(o => o.correct)?.text || '', [options]);
+
+  const correctChinese = useMemo(() => {
+    if (!correctText) return '';
+    const english = correctText;
+    const found = game?.words?.find(w => w.english === english)
+      || game?.words?.find(w => w.english?.toLowerCase?.() === english?.toLowerCase?.());
+    return found?.chinese || '';
+  }, [game, correctText]);
+
+  const optionChineseList = useMemo(() => {
+    return options.map(o => {
+      const english = o.text;
+      const found = game?.words?.find(w => w.english === english)
+        || game?.words?.find(w => w.english?.toLowerCase?.() === english?.toLowerCase?.());
+      return { id: o.id, chinese: found?.chinese || '' };
+    });
+  }, [options, game]);
+
+  const escapeHtml = (str: string) =>
+    str.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch] as string));
+
+  const storyHtml = useMemo(() => {
+    // 优先在故事中加粗中文关键词；若不存在再尝试加粗英文；都不存在则在末尾追加中文关键词
+    const tryBold = (src: string, keyword: string) => {
+      if (!keyword) return src;
+      const escapedForRegex = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedForRegex})`, 'i');
+      return src.replace(regex, '<strong class="text-gray-900">$1</strong>');
+    };
+
+    let replaced = storyRaw;
+    if (correctChinese) {
+      const newText = tryBold(replaced, correctChinese);
+      if (newText !== replaced) return newText;
+    }
+    if (correctText) {
+      const escapedForRegex = correctText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(\\b${escapedForRegex}\\b)`, 'i');
+      const newText = replaced.replace(regex, '<strong class="text-gray-900">$1</strong>');
+      if (newText !== replaced) return newText;
+    }
+    const safeZh = escapeHtml(correctChinese || '');
+    return `${replaced} （关键词：<strong class="text-gray-900">${safeZh}</strong>）`;
+  }, [storyRaw, correctChinese, correctText]);
+
   const handleOptionSelect = (optionId: number, correct: boolean) => {
     setSelectedOption(optionId);
     setShowFeedback(true);
-    
     if (correct) {
-      setScore(score + 10);
+      setScore(prev => prev + 10);
     }
   };
 
   const handleNextQuestion = () => {
     setCurrentQuestion(currentQuestion + 1);
+    setRoundIndex((idx) => Math.min(idx + 1, totalRounds - 1));
     setSelectedOption(null);
     setShowFeedback(false);
   };
@@ -51,10 +101,6 @@ const AdventureGame: React.FC = () => {
     );
   }
 
-  const game = (currentGame as AdventureGameType) || null;
-  const options: AdventureOption[] = game?.options || [];
-  const storyText = game?.story || '加载故事中...';
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-6">
       <div className="max-w-4xl mx-auto">
@@ -64,9 +110,6 @@ const AdventureGame: React.FC = () => {
             <div>
               <h1 className="text-2xl font-bold text-gray-800">故事冒险</h1>
               <p className="text-gray-600">第 {currentQuestion + 1} 关</p>
-              {user?.preferred_category && (
-                <p className="text-sm text-blue-700 mt-1">当前首选分类：{user.preferred_category}</p>
-              )}
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-purple-600">{score}</div>
@@ -82,7 +125,7 @@ const AdventureGame: React.FC = () => {
               <span className="text-3xl">📚</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">神秘的英语森林</h2>
-            <p className="text-lg text-gray-600 leading-relaxed">{storyText}</p>
+            <p className="text-lg text-gray-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: storyHtml }}></p>
           </div>
 
           {/* 问题区域 */}
@@ -105,7 +148,7 @@ const AdventureGame: React.FC = () => {
                   } ${selectedOption !== null ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <div className="text-lg font-medium">{option.text}</div>
-                  <div className="text-sm text-gray-500">点击选择</div>
+                  <div className="text-sm text-gray-500">{showFeedback ? (optionChineseList.find(i => i.id === option.id)?.chinese || '（无中文）') : '点击选择'}</div>
                 </button>
               ))}
             </div>
@@ -113,19 +156,23 @@ const AdventureGame: React.FC = () => {
 
           {/* 反馈区域 */}
           {showFeedback && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center">
-                <span className="text-2xl mr-3">{options.find(o => o.id === selectedOption)?.correct ? '🎉' : '😔'}</span>
-                <div>
-                  <h4 className="font-semibold text-blue-800">
-                    {options.find(o => o.id === selectedOption)?.correct ? '太棒了！' : '再试一次！'}
-                  </h4>
-                  <p className="text-blue-600">
-                    {options.find(o => o.id === selectedOption)?.correct ? '回答正确！你获得了10分奖励。' : '这个选项不正确，请再试一次。'}
-                  </p>
+            <>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div className="flex items-center">
+                  <span className="text-2xl mr-3">{options.find(o => o.id === selectedOption)?.correct ? '🎉' : '😔'}</span>
+                  <div>
+                    <h4 className="font-semibold text-blue-800">
+                      {options.find(o => o.id === selectedOption)?.correct ? '太棒了！' : '再试一次！'}
+                    </h4>
+                    <p className="text-blue-600">
+                      {options.find(o => o.id === selectedOption)?.correct ? '回答正确！你获得了10分奖励。' : '别灰心，继续加油！'}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              
+            </>
           )}
 
           {/* 操作按钮 */}
@@ -139,10 +186,10 @@ const AdventureGame: React.FC = () => {
             
             {showFeedback && (
               <button
-                onClick={currentQuestion < 2 ? handleNextQuestion : handleFinishGame}
+                onClick={roundIndex < (totalRounds - 1) ? handleNextQuestion : handleFinishGame}
                 className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
               >
-                {currentQuestion < 2 ? '下一题' : '完成游戏'}
+                {roundIndex < (totalRounds - 1) ? '下一题' : '完成游戏'}
               </button>
             )}
           </div>

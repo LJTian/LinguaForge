@@ -34,6 +34,13 @@ type AdventureGame struct {
 	Options      []AdventureOption `json:"options"`
 	Words        []AdventureWord   `json:"words"`
 	Completed    bool              `json:"completed"`
+	Rounds       []AdventureRound  `json:"rounds,omitempty"`
+}
+
+// AdventureRound 单轮题目（故事+选项）
+type AdventureRound struct {
+	Story   string            `json:"story"`
+	Options []AdventureOption `json:"options"`
 }
 
 type AdventureOption struct {

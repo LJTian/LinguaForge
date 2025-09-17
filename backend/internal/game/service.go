@@ -25,19 +25,43 @@ func (s *Service) StartAdventureGame(userID int, level int) (*AdventureGame, err
 		return nil, fmt.Errorf("failed to get words: %w", err)
 	}
 
-	// 创建故事和选项
-	story := s.generateStory(level)
-	options := s.generateOptions(words)
+	// 构造5轮题目（每轮1个主词 + 干扰项）
+	rounds := make([]AdventureRound, 0, len(words))
+	for i := 0; i < len(words); i++ {
+		// 当前主词
+		main := words[i]
+		// 干扰词：从剩余词里取3个，或随机补足
+		distract := make([]AdventureWord, 0, 4)
+		for j := 0; j < len(words) && len(distract) < 4; j++ {
+			if j == i {
+				continue
+			}
+			distract = append(distract, words[j])
+		}
+		if len(distract) > 3 {
+			distract = distract[:3]
+		}
+		// 明确标记正确与错误：主词为正确，其余为错误
+		main.Required = true
+		for k := range distract {
+			distract[k].Required = false
+		}
+		set := append([]AdventureWord{main}, distract...)
+		opts := s.generateOptions(set)
+		story := s.getStoryFromData(preferred, []AdventureWord{main})
+		rounds = append(rounds, AdventureRound{Story: story, Options: opts})
+	}
 
 	game := &AdventureGame{
 		ID:           rand.Intn(10000),
 		UserID:       userID,
 		CurrentLevel: level,
 		Score:        0,
-		Story:        story,
-		Options:      options,
+		Story:        rounds[0].Story,
+		Options:      rounds[0].Options,
 		Words:        words,
 		Completed:    false,
+		Rounds:       rounds,
 	}
 
 	return game, nil
@@ -217,49 +241,49 @@ func (s *Service) getRandomWords(count int, difficulty int, category string) ([]
 	return words, nil
 }
 
-func (s *Service) generateStory(level int) string {
-	stories := []string{
-		"你是一个勇敢的探险家，正在探索神秘的英语森林。突然，你遇到了一个需要帮助的精灵...",
-		"在一个遥远的英语王国里，你被选中去拯救被诅咒的公主。你需要用正确的英语咒语来解除诅咒...",
-		"你是一名星际旅行者，来到了一个说英语的外星文明。你需要学会他们的语言来建立友谊...",
-	}
-
-	if level >= len(stories) {
-		level = len(stories) - 1
-	}
-	return stories[level]
-}
-
-func (s *Service) generateOptions(words []AdventureWord) []AdventureOption {
-	var options []AdventureOption
-
-	for i, word := range words {
-		if word.Required {
-			options = append(options, AdventureOption{
-				ID:       i + 1,
-				Text:     word.English,
-				Correct:  true,
-				Feedback: "正确！你选择了正确的单词。",
-			})
+func (s *Service) getStoryFromData(category string, words []AdventureWord) string {
+	// 1) 优先从本局抽到的单词里找有 story 的词
+	for _, w := range words {
+		var story sql.NullString
+		if err := s.db.QueryRow("SELECT story FROM words WHERE id = ? AND story IS NOT NULL AND story <> '' LIMIT 1", w.ID).Scan(&story); err == nil {
+			if story.Valid && story.String != "" {
+				return story.String
+			}
 		}
 	}
 
-	// 添加一些错误选项
-	wrongOptions := []string{"wrong", "incorrect", "mistake", "error"}
-	for i, wrong := range wrongOptions {
-		options = append(options, AdventureOption{
-			ID:       len(words) + i + 1,
-			Text:     wrong,
-			Correct:  false,
-			Feedback: "这个选项不正确，请再试一次。",
-		})
+	// 2) 按分类随机取一个故事
+	if category != "" {
+		var story sql.NullString
+		if err := s.db.QueryRow("SELECT story FROM words WHERE category = ? AND story IS NOT NULL AND story <> '' ORDER BY RAND() LIMIT 1", category).Scan(&story); err == nil {
+			if story.Valid && story.String != "" {
+				return story.String
+			}
+		}
 	}
 
-	// 随机打乱选项
-	rand.Shuffle(len(options), func(i, j int) {
-		options[i], options[j] = options[j], options[i]
-	})
+	// 3) 兜底：返回空字符串（前端可显示默认提示）
+	return ""
+}
 
+func (s *Service) generateOptions(words []AdventureWord) []AdventureOption {
+	// 基于给定的词集合构建选项：标记为 Required 的为正确，其余为错误
+	options := make([]AdventureOption, 0, len(words))
+	for idx, w := range words {
+		options = append(options, AdventureOption{
+			ID:      idx + 1,
+			Text:    w.English,
+			Correct: w.Required,
+			Feedback: func() string {
+				if w.Required {
+					return "正确！你选择了正确的单词。"
+				}
+				return "这个选项不正确，请再试一次。"
+			}(),
+		})
+	}
+	// 随机打乱选项
+	rand.Shuffle(len(options), func(i, j int) { options[i], options[j] = options[j], options[i] })
 	return options
 }
 

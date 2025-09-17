@@ -100,6 +100,12 @@ export interface AdventureGame {
   options: AdventureOption[];
   words: AdventureWord[];
   completed: boolean;
+  rounds?: AdventureRound[];
+}
+
+export interface AdventureRound {
+  story: string;
+  options: AdventureOption[];
 }
 
 export interface AdventureOption {

@@ -81,7 +81,7 @@ const Games: React.FC = () => {
             <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-4xl">🏰</span>
             </div>
-            <h3 className="text-2xl font-bold mb-2">词汇塔防</h3>
+            <h3 className="text-2xl font-bold mb-2">词汇塔防（开发中）</h3>
             <p className="text-red-100">
               建造防御塔来抵御错误词汇的进攻，通过正确回答问题来升级你的防御。
             </p>
@@ -114,7 +114,7 @@ const Games: React.FC = () => {
             <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-4xl">🎤</span>
             </div>
-            <h3 className="text-2xl font-bold mb-2">互动配音</h3>
+            <h3 className="text-2xl font-bold mb-2">互动配音（开发中）</h3>
             <p className="text-green-100">
               为电影片段配音，练习发音和语调，AI会评估你的发音准确性。
             </p>
