@@ -20,7 +20,7 @@ func NewService(db *sql.DB) *Service {
 func (s *Service) StartAdventureGame(userID int, level int) (*AdventureGame, error) {
 	// 获取随机单词（根据用户偏好分类筛选）
 	preferred, _ := s.getUserPreferredCategory(userID)
-	words, err := s.getRandomWords(5, level, preferred)
+	words, err := s.getRandomWords(10, level, preferred)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get words: %w", err)
 	}

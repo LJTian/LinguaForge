@@ -10,9 +10,13 @@ const AdventureGame: React.FC = () => {
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [roundIndex, setRoundIndex] = useState(0);
+  const [startTime, setStartTime] = useState<number>(() => Date.now());
+  const [showSummary, setShowSummary] = useState(false);
+  const [results, setResults] = useState<Array<{ round:number; correct:boolean; english:string; chinese:string }>>([]);
 
   useEffect(() => {
     startGame('adventure', 1);
+    setStartTime(Date.now());
   }, [startGame]);
 
   // Compute game/rounds and memoized story before any early return to keep hooks order consistent
@@ -72,6 +76,13 @@ const AdventureGame: React.FC = () => {
     if (correct) {
       setScore(prev => prev + 10);
     }
+    const english = options.find(o => o.id === optionId)?.text || '';
+    const chinese = optionChineseList.find(i => i.id === optionId)?.chinese || '';
+    setResults(prev => {
+      // 防止重复记录同一轮
+      if (prev.some(r => r.round === roundIndex + 1)) return prev;
+      return [...prev, { round: roundIndex + 1, correct, english, chinese }];
+    });
   };
 
   const handleNextQuestion = () => {
@@ -81,13 +92,27 @@ const AdventureGame: React.FC = () => {
     setShowFeedback(false);
   };
 
+  const restartGame = () => {
+    setScore(0);
+    setCurrentQuestion(0);
+    setRoundIndex(0);
+    setSelectedOption(null);
+    setShowFeedback(false);
+    setResults([]);
+    setShowSummary(false);
+    setStartTime(Date.now());
+    startGame('adventure', 1);
+  };
+
   const handleFinishGame = async () => {
+    const elapsedSec = Math.max(1, Math.round((Date.now() - startTime) / 1000));
     await submitScore({
       game_type: 'adventure',
       score: score,
       level_reached: 1,
-      time_spent: 300, // 5分钟
+      time_spent: elapsedSec,
     });
+    setShowSummary(true);
   };
 
   if (isLoading) {
@@ -109,7 +134,7 @@ const AdventureGame: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">故事冒险</h1>
-              <p className="text-gray-600">第 {currentQuestion + 1} 关</p>
+              <p className="text-gray-600">第 {currentQuestion + 1} / {totalRounds} 关</p>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-purple-600">{score}</div>
@@ -118,7 +143,8 @@ const AdventureGame: React.FC = () => {
           </div>
         </div>
 
-        {/* 游戏内容 */}
+        {/* 游戏内容（显示总结时隐藏） */}
+        {!showSummary && (
         <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -175,7 +201,8 @@ const AdventureGame: React.FC = () => {
             </>
           )}
 
-          {/* 操作按钮 */}
+          {/* 操作按钮 */
+          }
           <div className="flex justify-between">
             <Link
               to="/games"
@@ -194,6 +221,70 @@ const AdventureGame: React.FC = () => {
             )}
           </div>
         </div>
+        )}
+
+        {/* 总结面板 */}
+        {showSummary && (
+          <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">本次答题情况</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">{totalRounds}</div>
+                <div className="text-sm text-gray-600">总题数</div>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">{Math.round(score / 10)}</div>
+                <div className="text-sm text-gray-600">正确题数</div>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">{score}</div>
+                <div className="text-sm text-gray-600">得分</div>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-gray-800">{Math.max(1, Math.round((Date.now() - startTime)/1000))}s</div>
+                <div className="text-sm text-gray-600">用时</div>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-left">
+                <thead>
+                  <tr className="text-gray-600">
+                    <th className="py-2 pr-4">题号</th>
+                    <th className="py-2 pr-4">英文</th>
+                    <th className="py-2 pr-4">中文</th>
+                    <th className="py-2 pr-4">结果</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.sort((a,b)=>a.round-b.round).map(r => (
+                    <tr key={r.round} className="border-t border-gray-100">
+                      <td className="py-2 pr-4">{r.round}</td>
+                      <td className="py-2 pr-4">{r.english}</td>
+                      <td className="py-2 pr-4 text-gray-600">{r.chinese || '（无中文）'}</td>
+                      <td className="py-2 pr-4">
+                        <span className={`px-2 py-1 rounded text-white ${r.correct ? 'bg-green-500' : 'bg-red-500'}`}>{r.correct ? '正确' : '错误'}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex justify-between mt-6">
+              <button
+                onClick={restartGame}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+              >
+                再来一次
+              </button>
+              <Link
+                to="/"
+                className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+              >
+                返回主页
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* 游戏提示 */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
