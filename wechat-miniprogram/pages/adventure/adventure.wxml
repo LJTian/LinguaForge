@@ -1,0 +1,109 @@
+<!--adventure.wxml-->
+<view class="page">
+  <!-- 游戏头部信息 -->
+  <view class="game-header">
+    <view class="game-info">
+      <view class="level-info">关卡 {{currentLevel}}</view>
+      <view class="score-info">分数: {{score}}</view>
+    </view>
+    <view class="game-stats">
+      <view class="stat-item">
+        <text class="stat-icon">❤️</text>
+        <text class="stat-value">{{lives}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-icon">💰</text>
+        <text class="stat-value">{{coins}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏状态 -->
+  <view class="game-status" wx:if="{{gameStatus === 'ready'}}">
+    <view class="status-content">
+      <view class="status-icon">🗡️</view>
+      <view class="status-title">冒险模式</view>
+      <view class="status-desc">准备开始你的单词冒险之旅！</view>
+      <button class="btn btn-primary" bindtap="startGame">开始游戏</button>
+    </view>
+  </view>
+
+  <!-- 游戏进行中 -->
+  <view class="game-playing" wx:if="{{gameStatus === 'playing'}}">
+    <!-- 当前单词 -->
+    <view class="word-display">
+      <view class="word-english">{{currentWord.english}}</view>
+      <view class="word-pronunciation" wx:if="{{currentWord.pronunciation}}">
+        {{currentWord.pronunciation}}
+      </view>
+    </view>
+
+    <!-- 选项 -->
+    <view class="options-container">
+      <view class="option-item" 
+            wx:for="{{options}}" 
+            wx:key="index"
+            bindtap="selectOption"
+            data-index="{{index}}"
+            class="{{selectedIndex === index ? 'selected' : ''}} {{showResult && index === correctIndex ? 'correct' : ''}} {{showResult && selectedIndex === index && index !== correctIndex ? 'wrong' : ''}}">
+        <view class="option-text">{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 下一题按钮 -->
+    <view class="next-button" wx:if="{{showResult}}">
+      <button class="btn btn-primary btn-full" bindtap="nextQuestion">
+        {{isLastQuestion ? '完成关卡' : '下一题'}}
+      </button>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-container">
+      <view class="progress-text">{{currentQuestionIndex + 1}} / {{totalQuestions}}</view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{progressPercent}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏结束 -->
+  <view class="game-over" wx:if="{{gameStatus === 'finished'}}">
+    <view class="result-content">
+      <view class="result-icon">{{gameResult.success ? '🎉' : '😢'}}</view>
+      <view class="result-title">
+        {{gameResult.success ? '关卡完成！' : '游戏结束'}}
+      </view>
+      <view class="result-stats">
+        <view class="result-item">
+          <view class="result-label">最终分数</view>
+          <view class="result-value">{{score}}</view>
+        </view>
+        <view class="result-item">
+          <view class="result-label">正确率</view>
+          <view class="result-value">{{accuracy}}%</view>
+        </view>
+        <view class="result-item">
+          <view class="result-label">获得金币</view>
+          <view class="result-value">+{{earnedCoins}}</view>
+        </view>
+        <view class="result-item" wx:if="{{earnedExp}}">
+          <view class="result-label">获得经验</view>
+          <view class="result-value">+{{earnedExp}}</view>
+        </view>
+      </view>
+      <view class="result-actions">
+        <button class="btn btn-outline" bindtap="restartGame">重新开始</button>
+        <button class="btn btn-primary" bindtap="nextLevel" wx:if="{{gameResult.success && hasNextLevel}}">
+          下一关卡
+        </button>
+        <button class="btn btn-secondary" bindtap="backToGames">返回游戏</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{isLoading}}">
+    <view class="loading-icon">🔄</view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view>

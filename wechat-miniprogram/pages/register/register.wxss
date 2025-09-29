@@ -1,0 +1,50 @@
+/* pages/register/register.wxss */
+
+.register-container {
+  min-height: 100vh;
+  padding: 40rpx;
+}
+
+.header-section {
+  text-align: center;
+  margin: 60rpx 0 80rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.form-section {
+  margin-bottom: 40rpx;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.link {
+  color: #4F46E5;
+  margin-left: 10rpx;
+}
+
+.agreement {
+  text-align: center;
+  padding: 0 20rpx;
+}
+
+.agreement-text {
+  font-size: 24rpx;
+  color: #9ca3af;
+  line-height: 1.6;
+}

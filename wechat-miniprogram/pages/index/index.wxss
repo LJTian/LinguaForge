@@ -1,0 +1,61 @@
+/* pages/index/index.wxss */
+
+.progress-item {
+  margin-bottom: 20rpx;
+}
+
+.progress-label {
+  font-size: 28rpx;
+  color: #374151;
+  margin-bottom: 10rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background-color: #e5e7eb;
+  border-radius: 6rpx;
+  overflow: hidden;
+  margin-bottom: 10rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #6b7280;
+  text-align: right;
+}
+
+.word-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.word-item:last-child {
+  border-bottom: none;
+}
+
+.word-english {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.word-chinese {
+  font-size: 28rpx;
+  color: #4F46E5;
+  margin-bottom: 8rpx;
+}
+
+.word-pronunciation {
+  font-size: 24rpx;
+  color: #6b7280;
+  font-style: italic;
+}

@@ -1,0 +1,171 @@
+/* pages/games/games.wxss */
+
+.game-list {
+  padding: 20rpx;
+}
+
+.game-card {
+  background: white;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.game-card:active {
+  transform: scale(0.98);
+}
+
+.game-icon {
+  font-size: 80rpx;
+  margin-right: 30rpx;
+  width: 120rpx;
+  text-align: center;
+}
+
+.game-info {
+  flex: 1;
+}
+
+.game-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 10rpx;
+}
+
+.game-desc {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-bottom: 15rpx;
+  line-height: 1.4;
+}
+
+.game-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.feature {
+  font-size: 24rpx;
+  color: #4F46E5;
+  background: rgba(79, 70, 229, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.game-arrow {
+  font-size: 32rpx;
+  color: #9ca3af;
+  margin-left: 20rpx;
+}
+
+.challenge-list {
+  padding: 0;
+}
+
+.challenge-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.challenge-item:last-child {
+  border-bottom: none;
+}
+
+.challenge-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+  width: 80rpx;
+  text-align: center;
+}
+
+.challenge-info {
+  flex: 1;
+}
+
+.challenge-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.challenge-desc {
+  font-size: 26rpx;
+  color: #6b7280;
+  margin-bottom: 12rpx;
+}
+
+.challenge-progress {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8rpx;
+  background-color: #e5e7eb;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%);
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.challenge-reward {
+  text-align: center;
+  margin-left: 20rpx;
+}
+
+.reward-coins {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #f59e0b;
+}
+
+.reward-icon {
+  font-size: 32rpx;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20rpx;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20rpx 10rpx;
+  background: #f8fafc;
+  border-radius: 12rpx;
+}
+
+.stat-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #4F46E5;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #6b7280;
+}

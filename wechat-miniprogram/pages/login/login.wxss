@@ -1,0 +1,58 @@
+/* pages/login/login.wxss */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.logo {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.app-name {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 10rpx;
+}
+
+.app-slogan {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.form-section {
+  margin-bottom: 40rpx;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+.link {
+  color: #4F46E5;
+  margin-left: 10rpx;
+}
+
+.quick-start {
+  text-align: center;
+}
+
+.quick-start-text {
+  font-size: 28rpx;
+  color: #9ca3af;
+  margin-bottom: 20rpx;
+  display: block;
+}

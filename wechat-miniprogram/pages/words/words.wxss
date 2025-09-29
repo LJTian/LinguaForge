@@ -1,0 +1,64 @@
+/* pages/words/words.wxss */
+
+.search-bar {
+  padding: 20rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.search-input {
+  width: 100%;
+  padding: 20rpx;
+  font-size: 32rpx;
+  border: none;
+  outline: none;
+}
+
+.word-list {
+  padding: 0 20rpx;
+}
+
+.word-card {
+  background: white;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.word-content {
+  flex: 1;
+}
+
+.word-english {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.word-chinese {
+  font-size: 32rpx;
+  color: #4F46E5;
+  margin-bottom: 8rpx;
+}
+
+.word-pronunciation {
+  font-size: 28rpx;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.word-actions {
+  margin-left: 20rpx;
+}
+
+.btn-sm {
+  padding: 15rpx 20rpx;
+  font-size: 28rpx;
+}

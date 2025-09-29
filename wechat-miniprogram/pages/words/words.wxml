@@ -1,0 +1,31 @@
+<!--words.wxml-->
+<view class="page">
+  <view class="header">
+    <view class="header-title">📚 单词库</view>
+    <view class="header-subtitle">学习和复习你的单词</view>
+  </view>
+
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索单词..." bindinput="onSearchInput" value="{{searchKeyword}}" />
+  </view>
+
+  <view class="word-list">
+    <view class="word-card" wx:for="{{words}}" wx:key="id">
+      <view class="word-content">
+        <view class="word-english">{{item.english}}</view>
+        <view class="word-chinese">{{item.chinese}}</view>
+        <view class="word-pronunciation" wx:if="{{item.pronunciation}}">{{item.pronunciation}}</view>
+      </view>
+      <view class="word-actions">
+        <button class="btn btn-sm" bindtap="playAudio" data-word="{{item.english}}">🔊</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{words.length === 0 && !isLoading}}">
+    <view class="empty-icon">📖</view>
+    <view class="empty-text">暂无单词数据</view>
+  </view>
+
+  <view class="loading" wx:if="{{isLoading}}">加载中...</view>
+</view>

@@ -1,0 +1,135 @@
+/* pages/leaderboard/leaderboard.wxss */
+
+.tabs {
+  display: flex;
+  background: white;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.tab-item {
+  flex: 1;
+  padding: 30rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #6b7280;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  color: white;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+}
+
+.leaderboard-list {
+  padding: 0 20rpx;
+}
+
+.rank-item {
+  background: white;
+  margin-bottom: 15rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+.rank-number {
+  width: 80rpx;
+  text-align: center;
+  margin-right: 20rpx;
+}
+
+.medal {
+  font-size: 48rpx;
+}
+
+.rank-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #6b7280;
+}
+
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.username {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.user-level {
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+.score-info {
+  text-align: right;
+}
+
+.score-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #4F46E5;
+  margin-bottom: 8rpx;
+}
+
+.score-label {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.my-rank {
+  margin: 40rpx 20rpx;
+}
+
+.rank-card {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  color: white;
+  padding: 40rpx;
+  border-radius: 20rpx;
+  text-align: center;
+}
+
+.rank-title {
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 20rpx;
+}
+
+.rank-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.my-rank-number {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.my-score {
+  font-size: 32rpx;
+  font-weight: bold;
+}

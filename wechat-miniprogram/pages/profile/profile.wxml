@@ -1,0 +1,123 @@
+<!--profile.wxml-->
+<view class="page">
+  <!-- 用户信息头部 -->
+  <view class="profile-header" wx:if="{{userInfo}}">
+    <view class="avatar">{{userInfo.username.charAt(0).toUpperCase()}}</view>
+    <view class="user-info">
+      <view class="username">{{userInfo.username}}</view>
+      <view class="user-email">{{userInfo.email}}</view>
+      <view class="user-level">
+        <text class="level-text">Lv.{{userInfo.level}}</text>
+        <view class="exp-bar">
+          <view class="exp-fill" style="width: {{expProgress}}%"></view>
+        </view>
+        <text class="exp-text">{{userInfo.experience}}/{{nextLevelExp}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录提示 -->
+  <view class="login-prompt" wx:if="{{!userInfo}}">
+    <view class="prompt-icon">👤</view>
+    <view class="prompt-title">请先登录</view>
+    <view class="prompt-desc">登录后查看个人资料和学习进度</view>
+    <button class="btn btn-primary" bindtap="goToLogin">立即登录</button>
+  </view>
+
+  <!-- 用户统计 -->
+  <view class="stats-section" wx:if="{{userInfo}}">
+    <view class="stats-grid">
+      <view class="stat-card">
+        <view class="stat-icon">💰</view>
+        <view class="stat-value">{{userInfo.coins}}</view>
+        <view class="stat-label">金币</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-icon">🎯</view>
+        <view class="stat-value">{{achievements.length}}</view>
+        <view class="stat-label">成就</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-icon">🔥</view>
+        <view class="stat-value">{{streak}}</view>
+        <view class="stat-label">连续天数</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-icon">📈</view>
+        <view class="stat-value">{{rank}}</view>
+        <view class="stat-label">排名</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近成就 -->
+  <view class="card" wx:if="{{userInfo && achievements.length > 0}}">
+    <view class="card-title">🏆 最近成就</view>
+    <view class="achievement-list">
+      <view class="achievement-item" wx:for="{{achievements}}" wx:key="id" wx:if="{{index < 3}}">
+        <view class="achievement-icon">{{item.icon}}</view>
+        <view class="achievement-info">
+          <view class="achievement-name">{{item.name}}</view>
+          <view class="achievement-desc">{{item.description}}</view>
+          <view class="achievement-date">{{item.earnedAt}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="view-all" bindtap="viewAllAchievements">查看全部成就 ></view>
+  </view>
+
+  <!-- 学习偏好 -->
+  <view class="card" wx:if="{{userInfo}}">
+    <view class="card-title">⚙️ 学习偏好</view>
+    <view class="preference-list">
+      <view class="preference-item">
+        <view class="preference-label">偏好分类</view>
+        <picker bindchange="onCategoryChange" value="{{categoryIndex}}" range="{{categories}}">
+          <view class="preference-value">{{categories[categoryIndex] || '请选择'}}</view>
+        </picker>
+      </view>
+      <view class="preference-item">
+        <view class="preference-label">学习提醒</view>
+        <switch checked="{{reminderEnabled}}" bindchange="onReminderChange" color="#4F46E5"/>
+      </view>
+      <view class="preference-item">
+        <view class="preference-label">音效开关</view>
+        <switch checked="{{soundEnabled}}" bindchange="onSoundChange" color="#4F46E5"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section" wx:if="{{userInfo}}">
+    <view class="menu-item" bindtap="viewAchievements">
+      <view class="menu-icon">🏆</view>
+      <view class="menu-text">我的成就</view>
+      <view class="menu-arrow">></view>
+    </view>
+    <view class="menu-item" bindtap="viewHistory">
+      <view class="menu-icon">📊</view>
+      <view class="menu-text">学习历史</view>
+      <view class="menu-arrow">></view>
+    </view>
+    <view class="menu-item" bindtap="viewSettings">
+      <view class="menu-icon">⚙️</view>
+      <view class="menu-text">设置</view>
+      <view class="menu-arrow">></view>
+    </view>
+    <view class="menu-item" bindtap="contactSupport">
+      <view class="menu-icon">💬</view>
+      <view class="menu-text">联系客服</view>
+      <view class="menu-arrow">></view>
+    </view>
+    <view class="menu-item" bindtap="showAbout">
+      <view class="menu-icon">ℹ️</view>
+      <view class="menu-text">关于我们</view>
+      <view class="menu-arrow">></view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{userInfo}}">
+    <button class="btn btn-outline btn-full" bindtap="handleLogout">退出登录</button>
+  </view>
+</view>

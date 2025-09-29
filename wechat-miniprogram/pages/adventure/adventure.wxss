@@ -1,0 +1,263 @@
+/* pages/adventure/adventure.wxss */
+
+.game-header {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  color: white;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-info {
+  flex: 1;
+}
+
+.level-info {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.score-info {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.game-stats {
+  display: flex;
+  gap: 30rpx;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-icon {
+  font-size: 32rpx;
+}
+
+.stat-value {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.game-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40rpx;
+}
+
+.status-content {
+  text-align: center;
+  max-width: 500rpx;
+}
+
+.status-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.status-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 20rpx;
+}
+
+.status-desc {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-bottom: 40rpx;
+  line-height: 1.5;
+}
+
+.game-playing {
+  padding: 40rpx 30rpx;
+}
+
+.word-display {
+  text-align: center;
+  margin-bottom: 60rpx;
+  padding: 40rpx;
+  background: white;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.word-english {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 20rpx;
+}
+
+.word-pronunciation {
+  font-size: 32rpx;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.options-container {
+  margin-bottom: 40rpx;
+}
+
+.option-item {
+  background: white;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  border: 3rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.option-item:active {
+  transform: scale(0.98);
+}
+
+.option-item.selected {
+  border-color: #4F46E5;
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.option-item.correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.option-item.wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.option-text {
+  font-size: 36rpx;
+  color: #1f2937;
+  text-align: center;
+  font-weight: 500;
+}
+
+.next-button {
+  margin-bottom: 40rpx;
+}
+
+.progress-container {
+  text-align: center;
+}
+
+.progress-text {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-bottom: 15rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background-color: #e5e7eb;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.game-over {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 40rpx;
+}
+
+.result-content {
+  text-align: center;
+  max-width: 600rpx;
+  width: 100%;
+}
+
+.result-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.result-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 40rpx;
+}
+
+.result-stats {
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-label {
+  font-size: 32rpx;
+  color: #6b7280;
+}
+
+.result-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #6b7280;
+}
+
+.loading-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  animation: rotate 2s linear infinite;
+}
+
+.loading-text {
+  font-size: 32rpx;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

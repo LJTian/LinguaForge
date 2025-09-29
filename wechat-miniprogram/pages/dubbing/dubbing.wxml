@@ -1,0 +1,16 @@
+<!--dubbing.wxml-->
+<view class="page">
+  <view class="game-header">
+    <view class="game-title">🎙️ 配音模式</view>
+    <view class="game-desc">为经典场景配音，练习发音</view>
+  </view>
+  
+  <view class="game-content">
+    <view class="coming-soon">
+      <view class="soon-icon">🎬</view>
+      <view class="soon-title">敬请期待</view>
+      <view class="soon-desc">配音模式正在开发中，即将上线！</view>
+      <button class="btn btn-primary" bindtap="goBack">返回游戏</button>
+    </view>
+  </view>
+</view>

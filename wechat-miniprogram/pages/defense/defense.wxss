@@ -1,0 +1,51 @@
+/* pages/defense/defense.wxss */
+
+.game-header {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 60rpx 40rpx;
+  text-align: center;
+}
+
+.game-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.game-desc {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.game-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40rpx;
+}
+
+.coming-soon {
+  text-align: center;
+  max-width: 500rpx;
+}
+
+.soon-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.soon-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 20rpx;
+}
+
+.soon-desc {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-bottom: 40rpx;
+  line-height: 1.5;
+}

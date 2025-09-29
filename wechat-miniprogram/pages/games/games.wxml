@@ -1,0 +1,112 @@
+<!--games.wxml-->
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-title">🎮 游戏中心</view>
+    <view class="header-subtitle">通过游戏学习，让英语变得有趣</view>
+  </view>
+
+  <!-- 游戏列表 -->
+  <view class="game-list">
+    <!-- 冒险模式 -->
+    <view class="game-card" bindtap="goToAdventure">
+      <view class="game-icon">🗡️</view>
+      <view class="game-info">
+        <view class="game-name">冒险模式</view>
+        <view class="game-desc">探索单词世界，完成各种挑战任务</view>
+        <view class="game-features">
+          <text class="feature">✨ 故事情节</text>
+          <text class="feature">🏆 成就系统</text>
+          <text class="feature">💰 金币奖励</text>
+        </view>
+      </view>
+      <view class="game-arrow">▶</view>
+    </view>
+
+    <!-- 防御模式 -->
+    <view class="game-card" bindtap="goToDefense">
+      <view class="game-icon">🛡️</view>
+      <view class="game-info">
+        <view class="game-name">防御模式</view>
+        <view class="game-desc">守护你的城堡，抵御单词怪物的攻击</view>
+        <view class="game-features">
+          <text class="feature">⚔️ 策略对战</text>
+          <text class="feature">🏰 城堡升级</text>
+          <text class="feature">📈 难度递增</text>
+        </view>
+      </view>
+      <view class="game-arrow">▶</view>
+    </view>
+
+    <!-- 配音模式 -->
+    <view class="game-card" bindtap="goToDubbing">
+      <view class="game-icon">🎙️</view>
+      <view class="game-info">
+        <view class="game-name">配音模式</view>
+        <view class="game-desc">为经典场景配音，练习发音和语调</view>
+        <view class="game-features">
+          <text class="feature">🎬 经典场景</text>
+          <text class="feature">🗣️ 发音练习</text>
+          <text class="feature">🎯 精准评分</text>
+        </view>
+      </view>
+      <view class="game-arrow">▶</view>
+    </view>
+  </view>
+
+  <!-- 今日挑战 -->
+  <view class="card">
+    <view class="card-title">🎯 今日挑战</view>
+    <view class="challenge-list">
+      <view class="challenge-item" wx:for="{{dailyChallenges}}" wx:key="id">
+        <view class="challenge-icon">{{item.icon}}</view>
+        <view class="challenge-info">
+          <view class="challenge-name">{{item.name}}</view>
+          <view class="challenge-desc">{{item.description}}</view>
+          <view class="challenge-progress">
+            <view class="progress-bar">
+              <view class="progress-fill" style="width: {{item.progress}}%"></view>
+            </view>
+            <view class="progress-text">{{item.current}}/{{item.target}}</view>
+          </view>
+        </view>
+        <view class="challenge-reward">
+          <view class="reward-coins">+{{item.reward}}</view>
+          <view class="reward-icon">💰</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 学习统计 -->
+  <view class="card" wx:if="{{userInfo}}">
+    <view class="card-title">📊 学习统计</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <view class="stat-value">{{gameStats.totalGames}}</view>
+        <view class="stat-label">游戏次数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{gameStats.totalScore}}</view>
+        <view class="stat-label">总分数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{gameStats.bestScore}}</view>
+        <view class="stat-label">最高分</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{gameStats.streak}}</view>
+        <view class="stat-label">连续天数</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录提示 -->
+  <view class="card" wx:if="{{!userInfo}}">
+    <view class="card-title">🔐 解锁更多功能</view>
+    <view class="card-content">
+      <view style="margin-bottom: 30rpx;">登录后可以保存游戏进度、获得奖励、参与排行榜！</view>
+      <button class="btn btn-primary btn-full" bindtap="goToLogin">立即登录</button>
+    </view>
+  </view>
+</view>
